@@ -1,4 +1,4 @@
-#include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -15,9 +15,8 @@ using std::vector;
 using std::string;
 
 const int logmaxn = 13;
-const int stsize = 1 << 14;
-const int maxn = 1 << logmaxn;
-int st[logmaxn][stsize];
+const int maxn = 5000;
+int st[logmaxn][maxn];
 
 const int inf = 1e9;
 
@@ -59,11 +58,8 @@ int query (int a, int b) {
 using namespace std;
 
 int main () {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    freopen("equipo.in", "r", stdin);
-    freopen("equipo.out", "w", stdout);
+	ifstream cin("equipo.in");
+	ofstream cout("equipo.out");
     
     int q, p;
     
@@ -76,7 +72,7 @@ int main () {
     }
 	sort(input.begin(), input.end());
     
-    fill(st[0], st[0]+stsize, inf);
+    fill(st[0], st[0]+maxn, inf);
     
     forn (i, p-1) {
         int iguales = 0;
@@ -90,9 +86,9 @@ int main () {
     
     init();
     
-    long long maxa = -inf;
-    long long maxi = -inf;
-    long long maxp = -inf;
+    int maxa = -inf;
+    int maxi = -inf;
+    int maxp = -inf;
     forn(i, p-1){
 		// cerr << "primero: " << input[i] << '\n';
         forsn(j, i+1, p){
@@ -102,7 +98,7 @@ int main () {
 
             int col = j-i+1; // cantidad de colaboradores (+1 pq [])
             int preguntas = query(i,j);
-            long long afinidad = (long long)col*preguntas*preguntas;
+            int afinidad = (long long)col*preguntas*preguntas;
 
 			// cerr << "{ colaboradores: " << col << ", comun: " << input[i].substr(0,preguntas) << "(" << preguntas << ") }\n";
 			if(maxa < afinidad){
