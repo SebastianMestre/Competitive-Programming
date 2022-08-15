@@ -28,51 +28,67 @@ const ll MOD = 1e9+7;
 const ld EPS = 1e-9;
 const ld PI = acosl(-1);
 
+struct S {
+	set<pii> data;
+	ll suma = 0;
+	int size() { return data.size(); }
+};
+
+void add(S& s, pii p) {
+	s.data.insert(p);
+	s.suma += p.fst;
+}
+
+void rem(S& s, pii p) {
+	if (!s.data.count(p)) return;
+	s.data.erase(p);
+	s.suma -= p.fst;
+}
 
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
 	int n, k; cin >> n >> k;
-	vector<int> arr(n); forn(i,n) cin >> arr[i];
+	vector<pii> arr(n); forn(i,n) { cin >> arr[i].fst; arr[i].snd = i; }
 
-	set<pii> s1;
-	set<pii> s2;
+	S s1, s2;
 
 	auto balancear = [&]() {
 		while (s1.size() < s2.size()) {
-			s1.insert(*s2.begin());
-			s2.erase(*s2.begin());
+			auto p = *s2.data.begin();
+			add(s1, p);
+			rem(s2, p);
 		}
 		while (s1.size() > s2.size() + 1) {
-			s2.insert(*s1.rbegin());
-			s1.erase(*s1.rbegin());
+			auto p = *s1.data.rbegin();
+			add(s2, p);
+			rem(s1, p);
 		}
 	};
 
 	auto mediana = [&]() {
-		return s1.rbegin()->first;
+		return s1.data.rbegin()->first;
 	};
 
 	auto sep = "";
 	int j = 1;
-	s1.insert({arr[0], 0});
+	add(s1, arr[0]);
 	forn(i,n) {
 
 		for (; j < n && j-i < k; j++) {
-			auto& mitad = (s1.empty() || arr[j] < mediana()) ? s1 : s2;
-			mitad.insert({arr[j], j});
+			auto& mitad = (s1.data.empty() || arr[j].fst < mediana()) ? s1 : s2;
+			add(mitad, arr[j]);
 			balancear();
 		}
 
 		if (j-i == k) {
-
-			int m = mediana();
-
-			cout << exchange(sep, " ") << m;
-
-			s1.erase({arr[i], i});
-			s2.erase({arr[i], i});
+			ll m = mediana();
+			ll c1 = m * s1.size() - s1.suma;
+			ll c2 = s2.suma - m * s2.size();
+			cout << exchange(sep, " ") << c1+c2;
+			rem(s1, arr[i]);
+			rem(s2, arr[i]);
 			balancear();
 		}
 	}

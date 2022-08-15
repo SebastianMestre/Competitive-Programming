@@ -30,53 +30,24 @@ const ld PI = acosl(-1);
 
 
 int main(){
+    //freopen("input.txt", "r", stdin);
+    //freopen("output.txt", "w", stdout);
+
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-	int n, k; cin >> n >> k;
-	vector<int> arr(n); forn(i,n) cin >> arr[i];
+	int n;
+	cin >> n;
 
-	set<pii> s1;
-	set<pii> s2;
-
-	auto balancear = [&]() {
-		while (s1.size() < s2.size()) {
-			s1.insert(*s2.begin());
-			s2.erase(*s2.begin());
-		}
-		while (s1.size() > s2.size() + 1) {
-			s2.insert(*s1.rbegin());
-			s1.erase(*s1.rbegin());
-		}
-	};
-
-	auto mediana = [&]() {
-		return s1.rbegin()->first;
-	};
-
-	auto sep = "";
-	int j = 1;
-	s1.insert({arr[0], 0});
-	forn(i,n) {
-
-		for (; j < n && j-i < k; j++) {
-			auto& mitad = (s1.empty() || arr[j] < mediana()) ? s1 : s2;
-			mitad.insert({arr[j], j});
-			balancear();
-		}
-
-		if (j-i == k) {
-
-			int m = mediana();
-
-			cout << exchange(sep, " ") << m;
-
-			s1.erase({arr[i], i});
-			s2.erase({arr[i], i});
-			balancear();
+	vector<int> memo(n+1, n+1);
+	memo[0] = 0;
+	forr(i, 1, n+1) {
+		for (int x = i; x; x /= 10) {
+			memo[i] = min(memo[i], 1+memo[i-x%10]);
 		}
 	}
-	cout << "\n";
 
+	cout << memo[n] << '\n';
+    
     return 0;
 }
