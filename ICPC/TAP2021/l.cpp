@@ -1,9 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define forr(i,a,b) for(int i=(a);i<(b);++i)
+#define forr(i,a,b) for(int i=int(a);i<int(b);++i)
 #define forn(i,n) forr(i,0,n)
-#define dforr(i,a,b) for(int i=(b)-1;i>=(a);--i)
+#define dforr(i,a,b) for(int i=int(b)-1;i>=int(a);--i)
 #define dforn(i,n) dforr(i,0,n)
 #define db(v) cerr<<#v" = "<<(v)<<'\n'
 #define vecp(v) cerr<<#v<<" = "; for(auto ee:v)cerr<<ee<<' '; cerr<<'\n'
@@ -35,36 +35,6 @@ int main(){
 
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
-    int n;cin>>n;
-    vector<ll>a(n);
-    forn(i,n)cin>>a[i];
-
-    int start=0,finish=n;
-    while(finish&&a[finish-1]<0){
-        --finish;
-    }
-
-    if(finish==start)cout<<0;
-    else{
-        ll total=0,sum=0;
-
-        forn(i,finish){
-            total+=a[i]*(i+1);
-            sum+=a[i];
-        }
-
-        ll best=total;
-
-        while(start!=finish){
-            total-=sum;
-            sum-=a[start];
-            ++start;
-            best=max(best,total);
-        }
-        cout<<best;
-    }
-    nn;
     
     return 0;
 }
